@@ -1,5 +1,4 @@
 import express from 'express'
-import db from '../db.js'
 import prisma from '../prismaClient.js';
 
 const router = express.Router();
@@ -8,7 +7,7 @@ const router = express.Router();
 router.get('/', async (request, response) =>{
     const todos = await prisma.todo.findMany({
         where:{
-            userId: request.userId
+            user_id: request.userId
         }
     })  
     response.json(todos);
@@ -18,8 +17,8 @@ router.post('/', async(request,response)=>{
     const {task} = request.body;
     const todo = await prisma.todo.create({
         data:{
-            task: defaultTodo,
-            userId: request.userId
+            task: task,
+            user_id: request.userId
         }
     })
     response.status(201).json(todo);
@@ -32,7 +31,7 @@ router.put('/:id', async (request,response)=>{
     const updatedTodo = await prisma.todo.update({
         where:{
             id: parseInt(id),
-            userId: request.userId
+            user_id: request.userId
         },
         data:{
             completed: !!completed
@@ -49,7 +48,7 @@ router.delete('/:id', async (request,response)=>{
     await prisma.todo.delete({
         where:{
             id: parseInt(id),
-            userId: userId
+            user_id: userId
         }
     })
     
